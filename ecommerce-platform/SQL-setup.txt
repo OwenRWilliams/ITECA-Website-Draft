@@ -1,0 +1,117 @@
+-- Create database
+CREATE DATABASE IF NOT EXISTS informal_market;
+USE informal_market;
+
+-- Users Table
+CREATE TABLE `users` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(100) UNIQUE NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `role` ENUM('buyer','seller','admin') DEFAULT 'buyer',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_login` TIMESTAMP NULL,
+  `status` ENUM('active','suspended') DEFAULT 'active',
+  INDEX `idx_email` (`email`),
+  INDEX `idx_role` (`role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Products Table
+CREATE TABLE `products` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `seller_id` INT NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `description` TEXT,
+  `price` DECIMAL(10,2) NOT NULL,
+  `stock` INT DEFAULT 0,
+  `image` VARCHAR(255),
+  `category` VARCHAR(50),
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`seller_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  INDEX `idx_category` (`category`),
+  FULLTEXT INDEX `ft_search` (`name`, `description`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Cart Table
+CREATE TABLE `cart` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  `quantity` INT DEFAULT 1,
+  `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_cart_item` (`user_id`, `product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Orders Table
+CREATE TABLE `orders` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `total` DECIMAL(10,2) NOT NULL,
+  `status` ENUM('pending','processing','shipped','delivered','cancelled') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Order Items Table
+CREATE TABLE `order_items` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `order_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  `quantity` INT NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `products`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Password Resets Table
+CREATE TABLE `password_resets` (
+  `email` VARCHAR(100) NOT NULL,
+  `token` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`email`),
+  INDEX `idx_token` (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Admin User (change password after creation)
+INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES
+('Admin User', 'admin@informalmarket.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+
+-- Sample Products
+INSERT INTO `products` (`seller_id`, `name`, `description`, `price`, `stock`, `category`) VALUES
+(1, 'Handwoven Basket', 'Traditional Zulu basket, 30cm diameter', 249.99, 15, 'handicrafts'),
+(1, 'Beaded Necklace', 'Colorful glass bead necklace', 89.99, 8, 'jewelry'),
+(1, 'Wooden Salad Bowl', 'Hand-carved indigenous wood', 179.99, 5, 'homeware');
+
+
+
+-- Create dedicated database user (change credentials)
+CREATE USER 'market_user'@'localhost' IDENTIFIED BY 'StrongPassword123!';
+GRANT ALL PRIVILEGES ON informal_market.* TO 'market_user'@'localhost';
+FLUSH PRIVILEGES;
+
+
+
+
+<?php
+$host = "localhost";
+$db   = "informal_market";
+$user = "market_user"; // Use the dedicated user
+$pass = "StrongPassword123!";
+
+$conn = new mysqli($host, $user, $pass, $db);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Set charset
+$conn->set_charset("utf8mb4");
+
+// Error reporting
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+?>
