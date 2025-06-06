@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
 $db   = "informal_market";
-$user = "market_user"; // Use the dedicated user
-$pass = "StrongPassword123!";
+$user = "admin"; // Use the dedicated user
+$pass = "test1234";
 
 $conn = new mysqli($host, $user, $pass, $db);
 
