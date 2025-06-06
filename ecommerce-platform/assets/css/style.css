@@ -1,4 +1,4 @@
-/* ========== MODERN THEME SETUP ========== */
+/* ========== THEME ========== */
 :root {
   --primary: #2563eb;       /* Vibrant blue */
   --primary-dark: #1d4ed8;
@@ -56,7 +56,7 @@ a:hover {
   width: 100%;
 }
 
-/* Modern card styling */
+/* Card styling */
 .card {
   background: white;
   border: none;

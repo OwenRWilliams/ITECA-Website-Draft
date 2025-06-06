@@ -1,5 +1,5 @@
 <?php 
-include('../../includes/header.php'); 
+include('../includes/header.php'); 
 ?>
 <div class="container mt-5">
   <h2>Login</h2>
@@ -15,7 +15,7 @@ include('../../includes/header.php');
     ?></div>
   <?php endif; ?>
 
-  <form method="POST" action="../../actions/login_action.php">
+  <form method="POST" action="../actions/login_action.php">
     <div class="mb-3">
       <label>Email</label>
       <input type="email" name="email" class="form-control" required>
