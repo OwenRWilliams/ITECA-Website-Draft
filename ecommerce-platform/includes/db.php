@@ -1,6 +1,6 @@
 <?php
 $host = "sql110.infinityfree.com";
-$db   = "if0_39224238_informal_market"; // Your database name
+$db   = "if0_39224238_informal_market"; // Replace XXX with your actual DB name
 $user = "if0_39224238";     // Your cPanel username
 $pass = "Russel829499"; // Use your real password here
 

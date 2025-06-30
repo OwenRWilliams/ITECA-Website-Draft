@@ -1,4 +1,6 @@
-<?php include('../includes/header.php'); ?>
+<?php
+include '../includes/header.php';
+?>
 
 <main class="hero-section">
   <div class="container d-flex flex-column justify-content-center align-items-center text-center min-vh-100">
