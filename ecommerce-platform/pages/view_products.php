@@ -1,16 +1,18 @@
 <?php
-include('includes/check_session.php');
+// Optional: disable session check for public test
+// include('includes/check_session.php');
+
+include('../includes/db.php');
 include('header.php');
 ?>
 
 <div class="container mt-5">
     <h2>All Products</h2>
-    
-    <!-- Search and Filter Bar (Optional) -->
+
     <div class="row mb-4">
         <div class="col-md-6">
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search products..." name="search">
+            <form class="d-flex" method="GET">
+                <input class="form-control me-2" type="search" placeholder="Search products..." name="search" value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
                 <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
         </div>
@@ -28,13 +30,19 @@ include('header.php');
         </div>
     </div>
 
-    <!-- Product Grid -->
     <div class="row">
         <?php
-        // Build base query
         $query = "SELECT * FROM products WHERE stock > 0";
-        
-        // Add sorting
+
+        $params = [];
+        $types = '';
+
+        if (isset($_GET['search']) && trim($_GET['search']) !== '') {
+            $query .= " AND name LIKE ?";
+            $params[] = "%{$_GET['search']}%";
+            $types .= 's';
+        }
+
         if (isset($_GET['sort'])) {
             switch ($_GET['sort']) {
                 case 'price_asc': $query .= " ORDER BY price ASC"; break;
@@ -42,10 +50,13 @@ include('header.php');
                 case 'newest': $query .= " ORDER BY created_at DESC"; break;
             }
         } else {
-            $query .= " ORDER BY created_at DESC"; // Default sorting
+            $query .= " ORDER BY created_at DESC";
         }
 
         $stmt = $conn->prepare($query);
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
         $stmt->execute();
         $products = $stmt->get_result();
 
@@ -54,15 +65,12 @@ include('header.php');
         ?>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card h-100 product-card">
-                    <!-- Product Image -->
                     <div class="image-container" style="height: 200px; overflow: hidden;">
-                        <img src="assets/products/<?php echo htmlspecialchars($product['image'] ?? 'default.jpg'); ?>" 
+                        <img src="../assets/products/<?php echo htmlspecialchars($product['image'] ?? 'default.jpg'); ?>" 
                              class="card-img-top p-3" 
                              alt="<?php echo htmlspecialchars($product['name']); ?>"
                              style="width: 100%; height: 100%; object-fit: contain">
                     </div>
-
-                    <!-- Product Body -->
                     <div class="card-body">
                         <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
                         <p class="card-text text-muted small">
@@ -78,15 +86,13 @@ include('header.php');
                             </span>
                         </div>
                     </div>
-
-                    <!-- Card Footer -->
                     <div class="card-footer bg-white border-top-0">
                         <div class="d-flex justify-content-between">
                             <a href="product_details.php?id=<?php echo $product['id']; ?>" 
                                class="btn btn-sm btn-outline-primary">
                                <i class="fas fa-info-circle"></i> Details
                             </a>
-                            <form action="actions/add_to_cart.php" method="POST" class="d-inline">
+                            <form action="../backend/add_to_cart.php" method="POST" class="d-inline">
                                 <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                                 <button type="submit" 
                                         class="btn btn-sm btn-success"
@@ -98,30 +104,12 @@ include('header.php');
                     </div>
                 </div>
             </div>
-        <?php 
-            endwhile;
-        else:
-        ?>
+        <?php endwhile; else: ?>
             <div class="col-12">
                 <div class="alert alert-info">No products found. Please check back later!</div>
             </div>
         <?php endif; ?>
     </div>
-
-    <!-- Pagination (Optional) -->
-    <nav class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">Previous</a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </nav>
 </div>
 
 <?php include('footer.php'); ?>

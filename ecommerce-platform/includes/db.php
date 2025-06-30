@@ -1,8 +1,8 @@
 <?php
-$host = "localhost";
-$db   = "informal_market";
-$user = "admin"; // Use the dedicated user
-$pass = "test1234";
+$host = "sql110.infinityfree.com";
+$db   = "if0_39224238_informal_market"; // Your database name
+$user = "if0_39224238";     // Your cPanel username
+$pass = "Russel829499"; // Use your real password here
 
 $conn = new mysqli($host, $user, $pass, $db);
 

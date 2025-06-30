@@ -37,6 +37,6 @@ header("Pragma: no-cache");
 
 // Redirect with success message
 $_SESSION['logout_success'] = "You have been successfully logged out.";
-header("Location: ../login.php");
+header("Location: pages/login.php");
 exit();
 ?>
