@@ -2,7 +2,7 @@
 session_start();
 include_once('../includes/db.php');
 
-// ✅ Only admins can delete
+// Only admins can delete
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_role'] !== 'admin') {
   header("Location: ../pages/login.php");
   exit();
