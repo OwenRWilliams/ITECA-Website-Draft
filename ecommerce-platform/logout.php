@@ -29,7 +29,6 @@ header("Clear-Site-Data: \"cache\", \"cookies\", \"storage\", \"executionContext
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 
-// ✅ Correct redirect for root logout.php
 header("Location: pages/login.php");
 exit();
 ?>
