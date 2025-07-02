@@ -1,19 +1,18 @@
 <?php
-// ✅ Enable errors for debug
+// debug
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// ✅ Session check
+// Session check
 include('../includes/session.php');
 
-// ✅ Role check
+// Role check
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_role'] !== 'admin') {
   header("Location: ../pages/login.php?error=unauthorized");
   exit();
 }
 
-// ✅ Correct header path
 include('../includes/header.php');
 ?>
 
