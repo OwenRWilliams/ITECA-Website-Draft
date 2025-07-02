@@ -1,5 +1,4 @@
 <?php
-// ✅ Start session with secure parameters
 if (session_status() === PHP_SESSION_NONE) {
   session_start([
     'cookie_lifetime' => 86400,
@@ -14,12 +13,12 @@ if (session_status() === PHP_SESSION_NONE) {
   }
 }
 
-// ✅ If page forgets $level, default it
+// If page forgets $level, default it
 if (!isset($level)) {
   $level = '';
 }
 
-// ✅ Figure out dashboard link for logged-in users
+// Figure out dashboard link for logged-in users
 if (isset($_SESSION['user_role'])) {
   switch ($_SESSION['user_role']) {
     case 'admin':
