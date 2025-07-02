@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('../includes/db.php');
 
-// ✅ Check login & role
+// Check login & role
 if (!isset($_SESSION['user_id']) || strtolower($_SESSION['user_role']) !== 'buyer') {
   header("Location: ../pages/login.php");
   exit();
@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id']) || strtolower($_SESSION['user_role']) !== 'buye
 
 $buyer_id = $_SESSION['user_id'];
 
-// ✅ Get cart items
+// Get cart items
 $stmt = $conn->prepare("
   SELECT cart.id AS cart_id, products.id AS product_id, products.seller_id, products.price, cart.quantity
   FROM cart 
@@ -29,7 +29,7 @@ if ($items->num_rows < 1) {
   exit();
 }
 
-// ✅ Start transaction
+// Start transaction
 $conn->begin_transaction();
 try {
   while ($row = $items->fetch_assoc()) {
@@ -39,18 +39,18 @@ try {
     $price = $row['price'];
     $total = $price * $quantity;
 
-    // ✅ Insert order
+    // Insert order
     $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, seller_id, quantity, total, status) VALUES (?, ?, ?, ?, ?, 'pending')");
     $stmt->bind_param("iiiid", $buyer_id, $product_id, $seller_id, $quantity, $total);
     $stmt->execute();
 
-    // ✅ Decrease stock
+    // Decrease stock
     $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
     $stmt->bind_param("ii", $quantity, $product_id);
     $stmt->execute();
   }
 
-  // ✅ Clear cart
+  // Clear cart
   $stmt = $conn->prepare("DELETE FROM cart WHERE user_id = ?");
   $stmt->bind_param("i", $buyer_id);
   $stmt->execute();
