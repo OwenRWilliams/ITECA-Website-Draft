@@ -1,22 +1,22 @@
 <?php
-// ✅ DEBUG for dev
+// DEBUG
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// ✅ Session check
+// Session check
 include('../includes/session.php');
 
-// ✅ Role check
+// Role check
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_role'] !== 'seller') {
   header("Location: /pages/login.php");
   exit();
 }
 
-// ✅ DB connect
+// DB connect
 include_once('../includes/db.php');
 
-// ✅ Handle Add Product form
+// Handle Add Product form
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
   $seller_id = $_SESSION['user_id'];
   $name = trim($_POST['name']);
@@ -34,14 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
   $success = "Product added successfully!";
 }
 
-// ✅ Get seller's products
+// Get seller's products
 $seller_id = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM products WHERE seller_id = ?");
 $stmt->bind_param("i", $seller_id);
 $stmt->execute();
 $products = $stmt->get_result();
 
-// ✅ Get seller's orders + buyer email
+// Get seller's orders + buyer email
 $stmt = $conn->prepare("
   SELECT o.id, o.user_id, u.email AS buyer_email, o.product_id, o.quantity, o.total, o.status, o.created_at
   FROM orders o
@@ -53,7 +53,7 @@ $stmt->bind_param("i", $seller_id);
 $stmt->execute();
 $orders = $stmt->get_result();
 
-// ✅ Page header
+// Page header
 include('../includes/header.php');
 ?>
 
@@ -77,7 +77,7 @@ include('../includes/header.php');
 <div class="container mt-5">
   <h2>Welcome, <?php echo htmlspecialchars($_SESSION['name'] ?? 'Seller'); ?>!</h2>
 
-  <!-- ✅ Add Product Form -->
+  <!-- Add Product Form -->
   <h4>Add New Product</h4>
   <?php if (isset($success)): ?>
     <div class="alert alert-success"><?php echo $success; ?></div>
@@ -100,7 +100,7 @@ include('../includes/header.php');
   </form>
 </div>
 
-<!-- ✅ Manage Products -->
+<!-- Manage Products -->
 <div class="container">
   <h4>My Products</h4>
   <?php if ($products->num_rows > 0): ?>
@@ -120,7 +120,7 @@ include('../includes/header.php');
   <?php endif; ?>
 </div>
 
-<!-- ✅ View Orders -->
+<!-- View Orders -->
 <div class="container">
   <h4>My Orders</h4>
   <?php if ($orders->num_rows > 0): ?>
