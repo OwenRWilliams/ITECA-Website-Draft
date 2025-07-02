@@ -6,14 +6,14 @@ error_reporting(E_ALL);
 include_once('../includes/db.php');
 include_once('../includes/header.php');
 
-// ✅ Restrict access to admins only
+// Restrict access to admins only
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
   echo "<div class='container mt-5 alert alert-danger'>Access Denied. Admins only.</div>";
   include_once('../includes/footer.php');
   exit;
 }
 
-// ✅ Get user stats
+// Get user stats
 $stmt = $conn->prepare("SELECT COUNT(*) as count FROM users");
 $stmt->execute();
 $result = $stmt->get_result();
@@ -29,19 +29,19 @@ $stmt->execute();
 $result = $stmt->get_result();
 $total_sellers = $result->fetch_assoc()['count'] ?? 0;
 
-// ✅ Product stats
+// Product stats
 $stmt = $conn->prepare("SELECT COUNT(*) as count FROM products");
 $stmt->execute();
 $result = $stmt->get_result();
 $total_products = $result->fetch_assoc()['count'] ?? 0;
 
-// ✅ Orders stats
+// Orders stats
 $stmt = $conn->prepare("SELECT COUNT(*) as count FROM orders");
 $stmt->execute();
 $result = $stmt->get_result();
 $total_orders = $result->fetch_assoc()['count'] ?? 0;
 
-// ✅ Revenue - FIX: use `total` not `total_price`
+// Revenue - FIX: use `total` not `total_price`
 $stmt = $conn->prepare("SELECT SUM(total) as revenue FROM orders");
 $stmt->execute();
 $result = $stmt->get_result();
