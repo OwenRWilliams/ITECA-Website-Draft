@@ -7,14 +7,14 @@ include_once('../includes/db.php');
 include_once('../includes/header.php');
 
 
-// ✅ 1) Check login by user_id only
+// Check login by user_id only
 if (!isset($_SESSION['user_id'])) {
   echo "No user ID. Redirecting to login.";
   header("Location: login.php");
   exit();
 }
 
-// ✅ 2) Normalize role
+// Normalize role
 if (strtolower($_SESSION['user_role']) !== 'buyer') {
   echo "Only buyers can access the cart.";
   exit();
@@ -22,7 +22,7 @@ if (strtolower($_SESSION['user_role']) !== 'buyer') {
 
 $user_id = $_SESSION['user_id'];
 
-// ✅ 3) Handle Remove in this same file
+// Handle Remove in this same file
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
   $cart_id = intval($_POST['cart_id']);
   $stmt = $conn->prepare("DELETE FROM cart WHERE id = ? AND user_id = ?");
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
   exit();
 }
 
-// ✅ 4) Load items
+// Load items
 $stmt = $conn->prepare("
   SELECT cart.id, products.name, products.price, cart.quantity
   FROM cart
@@ -64,7 +64,6 @@ $result = $stmt->get_result();
         <p>Quantity: <?= $row['quantity'] ?></p>
         <?php $total += $row['price'] * $row['quantity']; ?>
 
-        <!-- ✅ Remove: NO nested forms! -->
         <form method="POST" style="display:inline;">
           <input type="hidden" name="cart_id" value="<?= $row['id'] ?>">
           <button type="submit" name="remove_item" value="1" class="btn btn-danger btn-sm">Remove</button>
@@ -74,7 +73,6 @@ $result = $stmt->get_result();
 
     <h4>Total: R<?= number_format($total, 2) ?></h4>
 
-    <!-- ✅ Place order is separate -->
     <form action="../backend/place_order.php" method="POST">
       <button type="submit" class="btn btn-success">Place Order</button>
     </form>
