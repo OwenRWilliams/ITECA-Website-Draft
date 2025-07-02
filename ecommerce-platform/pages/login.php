@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   if (!empty($email) && !empty($password)) {
 
-    // ✅ Hardcoded admin fallback
+    // Hardcoded admin fallback
     if ($email === 'admin@gmail.com' && $password === 'admin1234') {
       $_SESSION['user_id'] = 0;   // fake ID for admin
       $_SESSION['user_role'] = 'admin';
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       exit();
     }
 
-    // ✅ Normal DB check
+    // Normal DB check
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $user = $result->fetch_assoc();
 
     if ($user && password_verify($password, $user['password'])) {
-      // ✅ Force role to lowercase
+      // Force role to lowercase
       $role = strtolower($user['role']);
 
       $_SESSION['user_id'] = $user['id'];
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $_SESSION['loggedin'] = true;
       $_SESSION['LAST_ACTIVITY'] = time();
 
-      // ✅ Redirect based on role
+      // Redirect based on role
       switch ($role) {
         case 'admin':
           header("Location: dashboard_admin.php");
