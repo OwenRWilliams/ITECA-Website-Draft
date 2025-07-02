@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 $errors = [];
 $success = "";
 
-// ✅ Handle POST logic
+// Handle POST logic
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $name = filter_var(trim($_POST['name']), FILTER_SANITIZE_STRING);
   $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   }
 }
 
-// ✅ Redirect if logged in already
+// Redirect if logged in already
 if (isset($_SESSION['user_id'])) {
   switch ($_SESSION['user_role']) {
     case 'buyer':
@@ -130,7 +130,7 @@ include('../includes/header.php');
                      class="form-control" data-match="#password" required>
             </div>
 
-            <!-- ✅ Buyer/Seller radio -->
+            <!-- Buyer/Seller radio -->
             <div class="mb-3">
               <label class="form-label">Account Type</label>
               <div class="form-check">
