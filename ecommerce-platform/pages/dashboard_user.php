@@ -26,9 +26,9 @@ if ($userId) {
 <head>
   <meta charset="UTF-8">
   <title>User Dashboard</title>
-  <!-- ✅ Link your custom CSS -->
+  <!-- Link your custom CSS -->
   <link rel="stylesheet" href="../assets/style.css">
-  <!-- ✅ Bootstrap CDN -->
+  <!-- Bootstrap CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -49,7 +49,7 @@ if ($userId) {
     </p>
   </div>
 
-  <!-- ✅ Quick Actions: Browse + Cart -->
+  <!-- Quick Actions: Browse + Cart -->
   <div class="row mb-4">
     <div class="col-md-6 mb-3">
       <a href="view_products.php" class="btn btn-primary w-100 py-3">
@@ -63,7 +63,7 @@ if ($userId) {
     </div>
   </div>
 
-  <!-- ✅ Featured Products -->
+  <!-- Featured Products -->
   <h4 class="mb-3">Recommended for You</h4>
   <div class="row">
     <?php
@@ -79,7 +79,7 @@ if ($userId) {
           <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
           <p class="card-text">R<?php echo number_format($product['price'], 2); ?></p>
 
-          <!-- ✅ Expand description toggle -->
+          <!-- Expand description toggle -->
           <button class="btn btn-sm btn-primary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#desc-<?php echo $productId; ?>">
             View Description
           </button>
@@ -102,7 +102,7 @@ if ($userId) {
 
 <?php include '../includes/footer.php'; ?>
 
-<!-- ✅ Bootstrap JS for toggles -->
+<!-- Bootstrap JS for toggles -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
