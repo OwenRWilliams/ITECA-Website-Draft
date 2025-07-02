@@ -6,13 +6,13 @@ error_reporting(E_ALL);
 include_once('../includes/db.php');
 include_once('../includes/header.php');
 
-// ✅ Role check
+// Role check
 if (!isset($_SESSION['loggedin']) || $_SESSION['user_role'] !== 'admin') {
   header('Location: ../pages/login.php');
   exit();
 }
 
-// ✅ Fetch all users
+// Fetch all users
 $result = $conn->query("SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC");
 ?>
 
