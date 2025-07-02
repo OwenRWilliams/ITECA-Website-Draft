@@ -3,18 +3,18 @@ session_start();
 include('../includes/db.php');
 include('../includes/header.php');
 
-// ✅ Check if the user is an admin (optional)
+// Check if the user is an admin (optional)
 $isAdmin = isset($_SESSION['loggedin']) && $_SESSION['user_role'] === 'admin';
 ?>
 
-<!-- ✅ Call your external stylesheet -->
+<!-- Call your external stylesheet -->
 <link rel="stylesheet" href="../assets/style.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <div class="container mt-5">
   <h2>All Products</h2>
 
-  <!-- ✅ Search + Sort -->
+  <!-- Search + Sort -->
   <div class="row mb-4">
     <div class="col-md-6">
       <form class="d-flex" method="GET">
@@ -36,7 +36,7 @@ $isAdmin = isset($_SESSION['loggedin']) && $_SESSION['user_role'] === 'admin';
     </div>
   </div>
 
-  <!-- ✅ Product Grid -->
+  <!-- Product Grid -->
   <div class="row">
     <?php
     $query = "SELECT * FROM products";
@@ -88,7 +88,7 @@ $isAdmin = isset($_SESSION['loggedin']) && $_SESSION['user_role'] === 'admin';
             </form>
 
             <?php if ($isAdmin): ?>
-              <!-- ✅ Admin Delete -->
+              <!-- Admin Delete -->
               <form action="../backend/delete_product.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
                 <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                 <button type="submit" class="btn btn-sm btn-danger">
